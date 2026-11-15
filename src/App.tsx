@@ -245,18 +245,18 @@ function Navbar({ view, user, avatar, avatarUrl, unread, following, navigate, lo
   )
 }
 
-function Footer({ toast }: { toast: (message: string) => void }) {
+function Footer() {
   return (
     <footer className="footer">
       <span className="footer-logo">Vive<span>+</span></span>
-      <div>{['Sobre Vive+', 'Privacidad', 'Términos', 'Contacto'].map(item => <button key={item} onClick={() => toast(`${item}: función de demostración`)}>{item}</button>)}</div>
+      <div>{['Sobre Vive+', 'Privacidad', 'Términos', 'Contacto'].map(item => <button key={item}>{item}</button>)}</div>
       <small>© 2026 Vive+ · Universidad de Ibagué</small>
     </footer>
   )
 }
 
-function Page({ children, footer = true, toast }: { children: ReactNode; footer?: boolean; toast: (message: string) => void }) {
-  return <><main className="page">{children}</main>{footer && <Footer toast={toast} />}</>
+function Page({ children, footer = true }: { children: ReactNode; footer?: boolean }) {
+  return <><main className="page">{children}</main>{footer && <Footer />}</>
 }
 
 function Modal({ title, children, onClose, wide = false }: { title: string; children: ReactNode; onClose: () => void; wide?: boolean }) {
@@ -277,7 +277,7 @@ function Modal({ title, children, onClose, wide = false }: { title: string; chil
 }
 
 function Toast({ message }: { message: string }) {
-  return <div className="toast"><span>✓</span>{message}</div>
+  return <div className="toast"><span>-</span>{message}</div>
 }
 
 function Sponsored({ onOpen, compact = false }: { onOpen: () => void; compact?: boolean }) {
@@ -451,7 +451,7 @@ function HomeView({
   toast: (message: string) => void
 }) {
   return (
-    <Page toast={toast}>
+    <Page>
       <div className="welcome">
         <h1>¡Hola, {user.name.split(' ')[0]}!</h1>
         <p>Un pequeño paso hoy hace una gran diferencia mañana.</p>
@@ -625,7 +625,7 @@ function CommunityView({
   })
 
   return (
-    <Page toast={toast}>
+    <Page>
       <div className="page-heading">
         <h1>Comunidad</h1>
         <label className="search-field">
@@ -886,7 +886,7 @@ function AddView({ user, avatar, onSaved, onCancel, onPremium, toast }: {
   }
 
   return (
-    <Page toast={toast}>
+    <Page>
       <div className="center-heading"><h1>Registra tu día</h1><p>Con pocos toques</p></div>
       <div className="tabs">{(['Comida', 'Ejercicio'] as const).map(item => <button className={tab === item ? 'active' : ''} onClick={() => setTab(item)} key={item}>{item}</button>)}</div>
       <section className="add-card">
@@ -963,7 +963,7 @@ function NotificationsView({
   const visible = notifications.filter(item => filter === 'Todas' || item.category === filter)
 
   return (
-    <Page toast={toast}>
+    <Page>
       <div className="notifications-grid">
         <section>
           <div className="title-actions">
@@ -1029,7 +1029,7 @@ function NotificationsView({
             <hr />
             <span>¡Vas increíble, sigue así!</span>
           </section>
-          <Sponsored compact onOpen={() => toast('Descubre este reto desde Inicio')} />
+          <Sponsored compact onOpen={() => toast('Solo en modo premium')} />
         </aside>
       </div>
     </Page>
@@ -1078,7 +1078,7 @@ function ProfileView({
   const goalOptions = [...new Set([user.goal, 'Salud', 'Comer verdura', '+ ejercicio', ...goals])]
 
   return (
-    <Page toast={toast}>
+    <Page>
       <section className="profile-hero">
         <div className="profile-identity">
           <div className="profile-avatar-wrap">
@@ -1794,7 +1794,7 @@ const uploadAvatar = async (file: File) => {
               <li>Apoyo de la comunidad</li>
               <li>Insignia al completar</li>
             </ul>
-            <Button variant="yellow" onClick={() => { closeModal(); toast('¡Te uniste al reto!') }}>Unirme al reto</Button>
+            <Button variant="yellow" onClick={() => { closeModal(); toast('Solo en modo premium') }}>Unirme al reto</Button>
           </div>
         </Modal>
       )}
