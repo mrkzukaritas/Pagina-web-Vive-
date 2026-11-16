@@ -148,7 +148,7 @@ export function AccessibilityWidget() {
         >
           <div className="a11y-menu-header">
             <div className="a11y-title-wrap">
-              <span className="a11y-title-icon">♿</span>
+              <span className="a11y-title-icon"></span>
               <div>
                 <h3>Accesibilidad</h3>
                 <small>Adapta la vista a tus necesidades</small>
@@ -168,7 +168,7 @@ export function AccessibilityWidget() {
             {/* 1. Aumentar tamaño del texto */}
             <div className="a11y-option-item">
               <div className="a11y-option-header">
-                <span className="a11y-option-icon">🔤</span>
+                <span className="a11y-option-icon"></span>
                 <div className="a11y-option-text">
                   <strong>Tamaño del texto</strong>
                   <small>Aumenta o disminuye la letra</small>
@@ -208,7 +208,7 @@ export function AccessibilityWidget() {
             {/* 2. Alto contraste */}
             <div className="a11y-option-item a11y-option-item--toggle">
               <div className="a11y-option-header">
-                <span className="a11y-option-icon">🌓</span>
+                <span className="a11y-option-icon"></span>
                 <div className="a11y-option-text">
                   <strong>Alto contraste</strong>
                   <small>Colores oscuros y bordes definidos</small>
@@ -228,7 +228,7 @@ export function AccessibilityWidget() {
             {/* 3. Reducir animaciones */}
             <div className="a11y-option-item a11y-option-item--toggle">
               <div className="a11y-option-header">
-                <span className="a11y-option-icon">⏸️</span>
+                <span className="a11y-option-icon"></span>
                 <div className="a11y-option-text">
                   <strong>Reducir animaciones</strong>
                   <small>Disminuye movimientos y transiciones</small>

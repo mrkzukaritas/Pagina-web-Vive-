@@ -560,6 +560,18 @@ html.high-contrast {
   --green-tint: #EDF9F4;
   --yellow-tint: #FFF8E6;
 }
+html.high-contrast .daily-card > small {
+  color: #FFFFFF !important;
+}
+html.high-contrast .daily-card > p {
+  color: #F2F2F2 !important;
+}
+html.high-contrast .button--yellow,
+html.high-contrast .button--yellow *,
+html.high-contrast .premium-card > b,
+html.high-contrast .premium-card > b * {
+  color: #FFFFFF !important;
+}
 html.high-contrast body { background: #FFFFFF; color: #000000; }
 html.high-contrast .card,
 html.high-contrast .feed-card,

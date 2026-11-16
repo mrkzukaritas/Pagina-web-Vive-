@@ -246,11 +246,60 @@ function Navbar({ view, user, avatar, avatarUrl, unread, following, navigate, lo
 }
 
 function Footer() {
+  const secciones = [
+    {
+      titulo: 'Sobre Vive+',
+      texto:
+        'Vive+ es una app de hábitos saludables para jóvenes de 18 a 28 años. Te ayuda a registrar tus comidas y tu actividad física, mantener tu racha y compartir tus avances con la comunidad.',
+    },
+    {
+      titulo: 'Privacidad',
+      texto:
+        'Cuidamos tus datos. Solo usamos tu información para personalizar tus metas y mostrarte tu progreso, y no la compartimos con terceros sin tu permiso.',
+    },
+    {
+      titulo: 'Términos',
+      texto:
+        'Al usar Vive+ aceptas respetar a la comunidad y usar la app con responsabilidad. Los retos y recomendaciones son de apoyo y no reemplazan la guía de un profesional de la salud.',
+    },
+    {
+      titulo: 'Contacto',
+      texto:
+        '¿Tienes dudas, ideas o comentarios? Escríbenos: maria.bermudez@estudiantesunibague.edu.co, juan.robayo1@estudiantesunibague.edu.co. Proyecto académico de la Universidad de Ibagué.',
+    },
+  ]
+
   return (
-    <footer className="footer">
-      <span className="footer-logo">Vive<span>+</span></span>
-      <div>{['Sobre Vive+', 'Privacidad', 'Términos', 'Contacto'].map(item => <button key={item}>{item}</button>)}</div>
-      <small>© 2026 Vive+ · Universidad de Ibagué</small>
+    <footer className="vfooter">
+      <style>{`
+        .vfooter { background: ${C.navy}; color: #DCE6EB; font-family: 'Open Sans', sans-serif; padding: 56px 24px 24px; margin-top: 48px; }
+        .vfooter-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); gap: 36px; }
+        .vfooter-logo { font-family: 'Merriweather', serif; font-weight: 700; font-size: 28px; line-height: 34px; color: #FFFFFF; margin: 0 0 8px; }
+        .vfooter-logo span { color: ${C.green}; }
+        .vfooter-slogan { font-size: 14px; line-height: 21px; margin: 0; }
+        .vfooter-title { font-family: 'Lato', sans-serif; font-weight: 700; font-size: 18px; line-height: 24px; color: ${C.green}; margin: 0 0 12px; }
+        .vfooter-text { font-size: 14px; line-height: 21px; margin: 0; }
+        .vfooter-bottom { max-width: 1200px; margin: 40px auto 0; padding-top: 20px; border-top: 1px solid #2B4A70; text-align: center; font-size: 12px; line-height: 16px; }
+        @media (max-width: 900px) { .vfooter-inner { grid-template-columns: 1fr 1fr; } .vfooter-brand { grid-column: 1 / -1; } }
+        @media (max-width: 520px) { .vfooter-inner { grid-template-columns: 1fr; } }
+      `}</style>
+
+      <div className="vfooter-inner">
+        <div className="vfooter-brand">
+          <p className="vfooter-logo">Vive<span>+</span></p>
+          <p className="vfooter-slogan">Pequeños hábitos, grandes cambios.</p>
+        </div>
+        {secciones.map(s => (
+          <section key={s.titulo}>
+            <h3 className="vfooter-title">{s.titulo}</h3>
+            <p className="vfooter-text">{s.texto}</p>
+          </section>
+        ))}
+      </div>
+
+      <div className="vfooter-bottom">
+        <small>© 2026 Vive+ · Universidad de Ibagué</small>
+      </div>
     </footer>
   )
 }
@@ -1162,7 +1211,21 @@ function ProfileView({
     </Page>
   )
 }
-
+const avatarBtn: React.CSSProperties = {
+  width: '100%',
+  height: 48,
+  minHeight: 48,
+  padding: '0 16px',
+  borderRadius: 12,
+  boxSizing: 'border-box',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontFamily: "'Lato', sans-serif",
+  fontWeight: 700,
+  fontSize: 16,
+  cursor: 'pointer',
+}
 function App() {
   const [view, setView] = useState<View>('Crear perfil')
   const [user, setUser] = useState<User>({ id: '', name: '', email: '', goal: '' })
@@ -1200,55 +1263,6 @@ function App() {
     setToastMessage(message)
     if (toastTimer.current) window.clearTimeout(toastTimer.current)
     toastTimer.current = window.setTimeout(() => setToastMessage(''), 3000)
-
-const uploadAvatar = async (file: File) => {
-  if (!file.type.startsWith('image/')) {
-    toast('Selecciona una imagen válida.')
-    return
-  }
-
-  if (file.size > 5 * 1024 * 1024) {
-    toast('La imagen no puede superar los 5 MB.')
-    return
-  }
-
-  const image = await compress(file)
-  const path = `${userId}/profile.jpg`
-
-  const { error: uploadError } = await supabase.storage
-    .from('avatars')
-    .upload(path, image, {
-      upsert: true,
-      contentType: 'image/jpeg'
-    })
-
-  if (uploadError) {
-    console.error(uploadError)
-    toast('No se pudo subir la fotografía.')
-    return
-  }
-
-  const { data } = supabase.storage
-    .from('avatars')
-    .getPublicUrl(path)
-
-  const photoUrl = `${data.publicUrl}?t=${Date.now()}`
-
-  const { error } = await supabase
-    .from('profiles')
-    .update({ avatar_url: photoUrl })
-    .eq('id', userId)
-
-  if (error) {
-    console.error(error)
-    toast('No se pudo guardar la fotografía.')
-    return
-  }
-
-  setAvatarUrl(photoUrl)
-  toast('Fotografía actualizada.')
-}
-
   }
   useEffect(() => () => { if (toastTimer.current) window.clearTimeout(toastTimer.current) }, [])
   const navigate = (next: View) => { setView(next); window.scrollTo({ top: 0, behavior: 'smooth' }) }
@@ -1408,30 +1422,23 @@ const uploadAvatar = async (file: File) => {
     if (!userId) return
     loadNotifications()
     const notifsChannel = supabase.channel(`notifs-${userId}`)
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` }, () => {
-        loadNotifications()
-        loadFriends()
-      })
-      const friendRequestsChannel = supabase
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` }, () => {
+    loadNotifications()
+    loadFriends()
+  })
+  .subscribe()
+
+const friendRequestsChannel = supabase
   .channel(`friend-requests-${userId}`)
   .on(
     'postgres_changes',
-    {
-      event: '*',
-      schema: 'public',
-      table: 'friend_requests',
-      filter: `receiver_id=eq.${userId}`,
-    },
+    { event: '*', schema: 'public', table: 'friend_requests', filter: `receiver_id=eq.${userId}` },
     (payload) => {
       loadRequestsData(userId)
-
-      if (payload.eventType === 'INSERT') {
-        toast('¡Tienes una nueva solicitud de amistad!')
-      }
+      if (payload.eventType === 'INSERT') toast('¡Tienes una nueva solicitud de amistad!')
     }
   )
   .subscribe()
-      .subscribe()
 
     // Realtime broadcast channel for friend requests
     const requestsChannel = supabase.channel('friend-requests-sync')
@@ -1833,14 +1840,8 @@ const uploadAvatar = async (file: File) => {
 
 {modal === 'avatar' && (
   <Modal title="Fotografía de perfil" onClose={closeModal}>
-    <div className="avatar-options">
-
-      <p>
-        Puedes mantener tus iniciales o subir una fotografía
-        para personalizar tu perfil.
-      </p>
-
-      <label className="button button--secondary">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', marginTop: 16 }}>
+      <label className="button button--primary" style={avatarBtn}>
         Subir fotografía
         <input
           type="file"
@@ -1849,41 +1850,37 @@ const uploadAvatar = async (file: File) => {
           onChange={async (event) => {
             const file = event.target.files?.[0]
             if (!file) return
-
             await uploadAvatar(file)
             event.target.value = ''
+            closeModal()
           }}
         />
       </label>
 
-      <Button
-        variant="secondary"
-        onClick={closeModal}
+      <button
+        type="button"
+        className="button button--secondary"
+        style={avatarBtn}
+        onClick={async () => {
+          const { error } = await supabase
+            .from('profiles')
+            .update({ avatar_url: null })
+            .eq('id', userId)
+
+          if (error) {
+            toast('No se pudo quitar la fotografía.')
+            return
+          }
+
+          setAvatarUrl('')
+          closeModal()
+          toast('Ahora usas tus iniciales.')
+        }}
       >
-        Mantener mis iniciales
-      </Button>
-
-    <button
-      className="button button--secondary"
-      onClick={async () => {
-        const { error } = await supabase
-          .from('profiles')
-          .update({ avatar_url: null })
-          .eq('id', userId)
-
-        if (error) {
-          toast('No se pudo eliminar la fotografía.')
-          return
-        }
-
-        setAvatarUrl('')
-        closeModal()
-      }}
-    >
-      Usar iniciales
-    </button>
-  </div>
-</Modal>
+        Usar iniciales
+      </button>
+    </div>
+  </Modal>
 )}
     
       {modal === 'edit' && (
